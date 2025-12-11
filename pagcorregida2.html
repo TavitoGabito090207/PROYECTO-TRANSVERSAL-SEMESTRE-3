@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>THE LENGUAJE BRIDE</title>
+<style>
+  :root {
+    --naranja: #ff6600;
+    --durazno: #ffad81;
+    --vainilla: #fff3b0;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: var(--vainilla);
+    color: #333;
+    overflow-x: hidden;
+  }
+  header {
+    background: var(--durazno);
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 15px;
+    position: relative;
+  }
+  #logo {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+  #titulo {
+    font-size: 2rem;
+    color: var(--naranja);
+    font-weight: 700;
+  }
+
+  #menuWrapper {
+    margin-left: auto;
+    position: relative; 
+  }
+
+  #btnMenu {
+    background-color: var(--naranja);
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+  }
+
+  #btnMenu:hover {
+    background-color: var(--durazno);
+    color: #4d2600;
+  }
+
+  #menuDropdown {
+    position: absolute;
+    top: 60px;
+    right: 13px;
+    background: var(--durazno);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    padding: 10px 15px;
+    display: none;
+    z-index: 1002;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  #menuDropdown.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #menuDropdown button {
+    background: none;
+    border: none;
+    color: #4d2600;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  #menuDropdown button:hover {
+    color: var(--naranja);
+  }
+
+  .screen {
+    display: none;
+    max-width: 900px;
+    margin: 90px auto 50px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  }
+  .screen.active {
+    display: block;
+  }
+
+  .carousel {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .carousel img {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    display: none;
+    margin: 0 auto;
+  }
+  .carousel img.active {
+    display: block;
+  }
+
+  #descripcion {
+    margin-top: 20px;
+    background: var(--durazno);
+    padding: 15px 20px;
+    border-radius: 10px;
+    color: #4d2600;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .btnBack {
+    background: var(--durazno);
+    color: #4d2600;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .btnBack:hover {
+    background: var(--naranja);
+    color: white;
+  }
+
+  h2 {
+    color: var(--naranja);
+    margin-bottom: 15px;
+  }
+
+  .contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .contenido img,
+  .contenido video,
+  .contenido audio {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .contenido p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  main {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+  main::-webkit-scrollbar {
+    width: 8px;
+  }
+  main::-webkit-scrollbar-thumb {
+    background-color: var(--durazno);
+    border-radius: 4px;
+  }
+
+  .btnTema {
+    background-color: var(--naranja);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px 8px 5px 0;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+  }
+  .btnTema:hover {
+    background-color: var(--durazno);
+    color: #4d2600;
+  }
+
+  .ejercicios {
+    background: var(--vainilla);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+
+  .pregunta {
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .opciones button {
+    flex: 1 1 40%;
+    min-width: 100px;
+  }
+
+  .resultado {
+    margin-top: 15px;
+    font-weight: 700;
+  }
+
+  h1 {
+    color: #e67e22;
+    font-size: 2.5em;
+    margin-bottom: 25px;
+    text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.6);
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 25px;
+    justify-items: center;
+  }
+
+  .shape-container {
+    text-align: center;
+    transition: transform 0.5s ease;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  .shape-container:hover {
+    transform: scale(1.1);
+  }
+
+  .shape {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #b85d1c;
+  }
+
+  .translation {
+    display: none;
+    font-size: 0.9em;
+    color: #007b5e;
+    margin-top: 5px;
+  }
+
+  @keyframes float { 0% {transform: translateY(0);} 100% {transform: translateY(-10px);} }
+  @keyframes spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
+  @keyframes pulse { 0%,100% {transform: scale(1);} 50% {transform: scale(1.1);} }
+  @keyframes sway { 0% {transform: rotate(-5deg);} 100% {transform: rotate(5deg);} }
+  @keyframes glow { 0%,100% { box-shadow: 0 0 10px transparent; } 50% { box-shadow: 0 0 15px rgba(255, 165, 0, 0.3); } }
+
+  .circle { background-color: #ff6f61; border-radius: 50%; animation: float 3s infinite alternate; }
+  .square { background-color: #4db6ac; animation: spin 6s infinite linear; }
+  .rectangle { background-color: #ffd54f; width: 140px; animation: glow 4s infinite ease-in-out; }
+  .triangle { width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 100px solid #81c784; animation: sway 2.5s infinite alternate ease-in-out; }
+  .oval { background-color: #ba68c8; width: 120px; border-radius: 50%; animation: float 4s infinite alternate; }
+  .diamond { background-color: #ff8a65; transform: rotate(45deg); animation: spin 10s infinite linear; }
+  .pentagon { background-color: #64b5f6; clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); animation: glow 5s infinite; }
+  .hexagon { background-color: #f48fb1; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); animation: float 4.5s infinite alternate; }
+  .star { color: #ffd54f; font-size: 60px; animation: spin 8s infinite linear; }
+  .heart { position: relative; width: 100px; height: 90px; animation: pulse 2.5s infinite ease-in-out; }
+  .heart:before, .heart:after { content: ""; position: absolute; top: 0; width: 50px; height: 80px; border-radius: 50px 50px 0 0; background: #ff5252; }
+  .heart:before { left: 50px; transform: rotate(-45deg); transform-origin: 0 100%; }
+  .heart:after { left: 0; transform: rotate(45deg); transform-origin: 100% 100%; }
+  .parallelogram { background-color: #aed581; transform: skew(20deg); animation: sway 3s infinite alternate; }
+  .trapezoid { border-bottom: 100px solid #ffb74d; border-left: 25px solid transparent; border-right: 25px solid transparent; height: 0; width: 100px; animation: float 3.5s infinite alternate; }
+  .crescent { position: relative; background: #da68ca; width: 100px; height: 100px; border-radius: 50%; animation: spin 12s infinite linear; }
+  .crescent::before { content: ''; position: absolute; background: #fff4e1; width: 80px; height: 80px; border-radius: 50%; top: 10px; left: 20px; }
+  .pentagram { background-color: #90caf9; clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); animation: sway 2.5s infinite alternate; }
+  .ellipse { background-color: #f06292; clip-path: ellipse(50% 25% at 50% 50%); animation: pulse 3s infinite ease-in-out; }
+
+  .translate-btn {
+    background-color: #ffb347;
+    border: none;
+    color: white;
+    padding: 4px 8px;
+    margin-top: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+  }
+  .translate-btn:hover { background-color: #ff9933; }
+
+  .quiz-section {
+    margin-top: 50px;
+    background: #ffe9c6;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(255, 165, 0, 0.2);
+  }
+  .question { margin: 15px 0; font-weight: bold; color: #b85d1c; }
+  .options button {
+    margin: 5px;
+    padding: 6px 10px;
+    background: #ffcc80;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #5a3d1a;
+  }
+  .options button:hover { background: #ffb74d; }
+
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .color-card {
+    width: 120px;
+    height: 120px;
+    border-radius: 15px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    position: relative;
+  }
+
+  .color-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  .color-card .translation {
+    opacity: 0;
+    position: absolute;
+    bottom: 10px;
+    font-size: 0.9em;
+    color: #fff;
+    transition: opacity 0.5s ease;
+  }
+
+  .color-card .translation.show {
+    opacity: 1;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-15px);}
+    60% {transform: translateY(-8px);}
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  @keyframes slideIn {
+    from {transform: translateY(30px); opacity: 0;}
+    to {transform: translateY(0); opacity: 1;}
+  }
+
+  @keyframes zoomIn {
+    from {transform: scale(0.5); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+  }
+
+  h3 {
+    color: #00796b;
+  }
+
+  .btnTema.correcta {
+    background-color: #4caf50 !important;
+    color: white;
+  }
+
+  .btnTema.incorrecta {
+    background-color: #e53935 !important;
+    color: white;
+  }
+
+  .correcto {
+    color: #2e7d32;
+  }
+
+  .incorrecto {
+    color: #c62828;
+  }
+
+  /* 🎒 Estilo tipo aula para tablas de pronombres */
+  .tabla-pronombres table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1rem;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .tabla-pronombres th {
+    background-color: var(--naranja);
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  .tabla-pronombres td {
+    background-color: var(--vainilla);
+    color: #4d2600;
+    text-align: center;
+    padding: 10px;
+    border-bottom: 2px solid var(--durazno);
+  }
+  .tabla-pronombres tr:hover td {
+    background-color: var(--durazno);
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <img id="logo" src="images/logotipo niño.jpg" alt="Logo The Lenguaje Bride">
+  <div id="titulo">THE LENGUAJE BRIDE</div>
+  <div id="menuWrapper">
+    <button id="btnMenu" aria-label="Abrir menú de temas">☰ Menú de Temas</button>
+    <div id="menuDropdown" class="dropdown">
+      <ul>
+        <li><button class="temaBtn" data-target="colores">Colores</button></li>
+        <li><button class="temaBtn" data-target="figuras">Figuras</button></li>
+        <li><button class="temaBtn" data-target="pronombres">Pronombres</button></li>
+        <li><button class="temaBtn" data-target="vocabulario">Vocabulario</button></li>
+        <li><button class="temaBtn" data-target="verbos">Verbos</button></li>
+        <li><button class="temaBtn" data-target="saludos">Saludos</button></li>
+        <li><button class="temaBtn" data-target="numeros">Números</button></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<section id="inicio" class="screen active" aria-label="Pantalla principal">
+  <div class="carousel" aria-label="Carrusel de imágenes">
+    <img src="images/colores en ingles.jpg" alt="Colores" class="active" />
+    <img src="images/figuras en ingles.jpg" alt="Figuras" />
+    <img src="images/pronombres en ingles.jpg" alt="Pronombres" />
+    <img src="images/vocabulario en ingles.png" alt="Vocabulario" />
+    <img src="images/verbos en ingles.png" alt="Verbos" />
+    <img src="images/saludos en ingles.jpg" alt="Saludos" />
+    <img src="images/numeros en ingles.jpg" alt="Números" />
+  </div>
+  <div id="descripcion">
+    <p>Bienvenido a THE LENGUAJE BRIDE, tu espacio para aprender inglés de forma divertida y efectiva. Explora los temas desde el menú y mejora tus habilidades con imágenes, videos, audios y ejercicios.</p>
+  </div>
+</section>
+
+<section id="colores" class="screen" aria-label="Tema Colores">
+  <button class="btnBack" aria-label="Volver al menú de temas">← Volver</button>
+  <h1>🎨 Learn the Colors in English 🎵</h1>
+  <div class="color-grid" id="colorGrid"></div>
+  
+  <!-- Preguntas sobre los Colores -->
+  <div id="color-questions" style="margin-top: 40px;">
+    <h2>Preguntas sobre los Colores</h2>
+
+    <!-- Pregunta 1 -->
+    <div class="question" data-sound="q1">
+      <p>1. ¿De qué color son las manzanas?</p>
+      <div class="options">
+        <button data-correct="true" data-color="Red">Red</button>
+        <button data-color="Green">Green</button>
+        <button data-color="Yellow">Yellow</button>
+      </div>
+      <p class="result"></p>
+    </div>
+
+    <!-- Pregunta 2 -->
+    <div class="question" data-sound="q2">
+      <p>2. ¿De qué color es el cielo?</p>
+      <div class="options">
+        <button data-correct="true" data-color="Blue">Blue</button>
+        <button data-color="White">White</button>
+        <button data-color="Gray">Gray</button>
+      </div>
+      <p class="result"></p>
+    </div>
+
+    <!-- Pregunta 3 -->
+    <div class="question" data-sound="q3">
+      <p>3. ¿De qué color es el sol?</p>
+      <div class="options">
+        <button data-correct="true" data-color="Yellow">Yellow</button>
+        <button data-color="Orange">Orange</button>
+        <button data-color="White">White</button>
+      </div>
+      <p class="result"></p>
+    </div>
+
+    <!-- Pregunta 4 -->
+    <div class="question" data-sound="q4">
+      <p>4. ¿De qué color es el chocolate?</p>
+      <div class="options">
+        <button data-correct="true" data-color="Brown">Brown</button>
+        <button data-color="Black">Black</button>
+        <button data-color="Gray">Gray</button>
+      </div>
+      <p class="result"></p>
+    </div>
+
+    <!-- Pregunta 5 -->
+    <div class="question" data-sound="q5">
+      <p>5. ¿De qué color es el pasto?</p>
+      <div class="options">
+        <button data-correct="true" data-color="Green">Green</button>
+        <button data-color="Yellow">Yellow</button>
+        <button data-color="Brown">Brown</button>
+      </div>
+      <p class="result"></p>
+    </div>
+
+    <!-- Pregunta 6 -->
+    <div class="question" data-sound="q6">
+      <p>6. ¿De qué color es una fresa?</p>
+      <div class="options">
+        <button data-correct="true" data-color="Red">Red</button>
+        <button data-color="Pink">Pink</button>
+        <button data-color="Purple">Purple</button>
+      </div>
+      <p class="result"></p>
+    </div>
+
+    <!-- Pregunta 7 -->
+    <div class="question" data-sound="q7">
+      <p>7. ¿De qué color es la leche?</p>
+      <div class="options">
+        <button data-correct="true" data-color="White">White</button>
+        <button data-color="Gray">Gray</button>
+        <button data-color="Yellow">Yellow</button>
+      </div>
+      <p class="result"></p>
+    </div>
+
+    <!-- Pregunta 8 -->
+    <div class="question" data-sound="q8">
+      <p>8. ¿De qué color es una nube?</p>
+      <div class="options">
+        <button data-correct="true" data-color="White">White</button>
+        <button data-color="Blue">Blue</button>
+        <button data-color="Gray">Gray</button>
+      </div>
+      <p class="result"></p>
+    </div>
+
+    <!-- Pregunta 9 -->
+    <div class="question" data-sound="q9">
+      <p>9. ¿De qué color es una naranja?</p>
+      <div class="options">
+        <button data-correct="true" data-color="Orange">Orange</button>
+        <button data-color="Yellow">Yellow</button>
+        <button data-color="Red">Red</button>
+      </div>
+      <p class="result"></p>
+    </div>
+
+    <!-- Pregunta 10 -->
+    <div class="question" data-sound="q10">
+      <p>10. ¿De qué color es una uva?</p>
+      <div class="options">
+        <button data-correct="true" data-color="Purple">Purple</button>
+        <button data-color="Green">Green</button>
+        <button data-color="Pink">Pink</button>
+      </div>
+      <p class="result"></p>
+    </div>
+  </div>
+</section>
+
+<section id="figuras" class="screen" aria-label="Tema Figuras">
+  <button class="btnBack">← Volver</button>
+  <h1>🌈 Figuras</h1>
+  <div class="container">
+    <div class="shape-container" data-en="Circle" data-es="Círculo"><div class="shape circle"></div><div class="label">Circle</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Square" data-es="Cuadrado"><div class="shape square"></div><div class="label">Square</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Rectangle" data-es="Rectángulo"><div class="shape rectangle"></div><div class="label">Rectangle</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Triangle" data-es="Triángulo"><div class="shape triangle"></div><div class="label">Triangle</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Oval" data-es="Óvalo"><div class="shape oval"></div><div class="label">Oval</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Diamond" data-es="Rombo"><div class="shape diamond"></div><div class="label">Diamond</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Pentagon" data-es="Pentágono"><div class="shape pentagon"></div><div class="label">Pentagon</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Hexagon" data-es="Hexágono"><div class="shape hexagon"></div><div class="label">Hexagon</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Star" data-es="Estrella"><div class="shape star">★</div><div class="label">Star</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Heart" data-es="Corazón"><div class="shape heart"></div><div class="label">Heart</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Parallelogram" data-es="Paralelogramo"><div class="shape parallelogram"></div><div class="label">Parallelogram</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Trapezoid" data-es="Trapecio"><div class="shape trapezoid"></div><div class="label">Trapezoid</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Crescent" data-es="Luna creciente"><div class="shape crescent"></div><div class="label">Crescent</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Pentagram" data-es="Pentagrama"><div class="shape pentagram"></div><div class="label">Pentagram</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+    <div class="shape-container" data-en="Ellipse" data-es="Elipse"><div class="shape ellipse"></div><div class="label">Ellipse</div><button class="translate-btn">Traducir</button><div class="translation"></div></div>
+  </div>
+  <div class="quiz-section">
+    <h2>🧠 Preguntas (elige la respuesta correcta)</h2>
+    <div class="question">1️⃣ ¿Cómo se dice "Círculo" en inglés?</div>
+    <div class="options"><button data-answer="Correct">Circle</button><button data-answer="Incorrect">Square</button></div>
+    <div class="question">2️⃣ ¿Cómo se dice "Corazón" en inglés?</div>
+    <div class="options"><button data-answer="Correct">Heart</button><button data-answer="Incorrect">Star</button></div>
+    <div class="question">3️⃣ ¿Qué figura es un "Triangle"?</div>
+    <div class="options"><button data-answer="Correct">Triángulo</button><button data-answer="Incorrect">Rectángulo</button></div>
+    <div class="question">4️⃣ ¿Cómo se dice "Estrella" en inglés?</div>
+    <div class="options"><button data-answer="Correct">Star</button><button data-answer="Incorrect">Heart</button></div>
+    <div class="question">5️⃣ ¿Qué forma es un "Square"?</div>
+    <div class="options"><button data-answer="Correct">Cuadrado</button><button data-answer="Incorrect">Óvalo</button></div>
+    <div class="question">6️⃣ ¿Cómo se dice "Rombo" en inglés?</div>
+    <div class="options"><button data-answer="Correct">Diamond</button><button data-answer="Incorrect">Hexagon</button></div>
+  </div>
+</section>
+
+<section id="pronombres" class="screen" aria-label="Tema Pronombres">
+  <button class="btnBack" aria-label="Volver al menú de temas">← Volver</button>
+  <h2>Pronombres</h2>
+  <main class="contenido" tabindex="0">
+    <p>Aprende los pronombres en inglés y su significado en español.</p>
+     <div style="text-align: center;">
+      <img src="images/PRONOMBRES 2.jpg" alt="Tabla con ejemplos de pronombres en inglés" />
+     </div>
+
+    <!-- 📘 Tabla de Pronombres en Inglés -->
+    <div class="tabla-pronombres" aria-label="Tabla de pronombres en inglés">
+      <h3>Pronombres personales</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Inglés</th>
+            <th>Español</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>I</td><td>Yo</td></tr>
+          <tr><td>You</td><td>Tú / Usted</td></tr>
+          <tr><td>He</td><td>Él</td></tr>
+          <tr><td>She</td><td>Ella</td></tr>
+          <tr><td>It</td><td>Eso / Ello</td></tr>
+          <tr><td>We</td><td>Nosotros(as)</td></tr>
+          <tr><td>They</td><td>Ellos(as)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Pronombres posesivos</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Inglés</th>
+            <th>Español</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>My</td><td>Mi</td></tr>
+          <tr><td>Your</td><td>Tu / Su</td></tr>
+          <tr><td>His</td><td>Su (de él)</td></tr>
+          <tr><td>Her</td><td>Su (de ella)</td></tr>
+          <tr><td>Its</td><td>Su (de eso)</td></tr>
+          <tr><td>Our</td><td>Nuestro(a)</td></tr>
+          <tr><td>Their</td><td>Su (de ellos)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Pronombres reflexivos</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Inglés</th>
+            <th>Español</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Myself</td><td>Yo mismo(a)</td></tr>
+          <tr><td>Yourself</td><td>Tú mismo(a)</td></tr>
+          <tr><td>Himself</td><td>Él mismo</td></tr>
+          <tr><td>Herself</td><td>Ella misma</td></tr>
+          <tr><td>Itself</td><td>Eso mismo</td></tr>
+          <tr><td>Ourselves</td><td>Nosotros mismos</td></tr>
+          <tr><td>Themselves</td><td>Ellos mismos</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 🧩 Ejercicios -->
+    <div class="ejercicios" aria-label="Ejercicios sobre pronombres">
+      <h3>Ejercicios</h3>
+      
+      <!-- Ejercicio 1 -->
+      <div class="pregunta" id="pregunta-pronombres">
+        1️⃣ ¿Cuál es el pronombre para "ella" en inglés?
+      </div>
+      <div class="opciones" id="opciones-pronombres">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres')">He</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuestaPronombres(this, 'pronombres')">She</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres')">It</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres')">We</button>
+      </div>
+      <div class="resultado" id="resultado-pronombres" aria-live="polite"></div>
+      
+      <br>
+      
+      <!-- Ejercicio 2 -->
+      <div class="pregunta" id="pregunta-pronombres2">
+        2️⃣ ¿Cuál es el pronombre correcto para "nosotros" en inglés?
+      </div>
+      <div class="opciones" id="opciones-pronombres2">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres2')">They</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuestaPronombres(this, 'pronombres2')">We</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres2')">You</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres2')">He</button>
+      </div>
+      <div class="resultado" id="resultado-pronombres2" aria-live="polite"></div>
+      
+      <br>
+      
+      <!-- Ejercicio 3 -->
+      <div class="pregunta" id="pregunta-pronombres3">
+        3️⃣ Completa: "This is ___ book." (Este es mi libro)
+      </div>
+      <div class="opciones" id="opciones-pronombres3">
+        <button class="btnTema" data-correct="true" onclick="verificarRespuestaPronombres(this, 'pronombres3')">my</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres3')">mine</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres3')">me</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres3')">I</button>
+      </div>
+      <div class="resultado" id="resultado-pronombres3" aria-live="polite"></div>
+      
+      <br>
+      
+      <!-- Ejercicio 4 -->
+      <div class="pregunta" id="pregunta-pronombres4">
+        4️⃣ ¿Cuál es el pronombre para "ellos" en inglés?
+      </div>
+      <div class="opciones" id="opciones-pronombres4">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres4')">We</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuestaPronombres(this, 'pronombres4')">They</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres4')">You</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres4')">He</button>
+      </div>
+      <div class="resultado" id="resultado-pronombres4" aria-live="polite"></div>
+      
+      <br>
+      
+      <h3>✍️ Ejercicios de completar oraciones</h3>
+      
+      <!-- Ejercicio 5 -->
+      <div class="pregunta" id="pregunta-pronombres5">
+        5️⃣ ________ estudia programación todos los días. (Juan)
+      </div>
+      <div class="opciones" id="opciones-pronombres5">
+        <button class="btnTema" data-correct="true" onclick="verificarRespuestaPronombres(this, 'pronombres5')">He</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres5')">She</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres5')">We</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres5')">They</button>
+      </div>
+      <div class="resultado" id="resultado-pronombres5" aria-live="polite"></div>
+      
+      <br>
+      
+      <!-- Ejercicio 6 -->
+      <div class="pregunta" id="pregunta-pronombres6">
+        6️⃣ ________ vamos al cine los fines de semana. (María y yo)
+      </div>
+      <div class="opciones" id="opciones-pronombres6">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres6')">They</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuestaPronombres(this, 'pronombres6')">We</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres6')">You</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres6')">I</button>
+      </div>
+      <div class="resultado" id="resultado-pronombres6" aria-live="polite"></div>
+      
+      <br>
+      
+      <!-- Ejercicio 7 -->
+      <div class="pregunta" id="pregunta-pronombres7">
+        7️⃣ ________ son mis mejores amigos. (Tú y Ana)
+      </div>
+      <div class="opciones" id="opciones-pronombres7">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres7')">We</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuestaPronombres(this, 'pronombres7')">You</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres7')">They</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuestaPronombres(this, 'pronombres7')">She</button>
+      </div>
+      <div class="resultado" id="resultado-pronombres7" aria-live="polite"></div>
+    </div>
+  </main>
+</section>
+
+<section id="vocabulario" class="screen" aria-label="Tema Vocabulario">
+  <button class="btnBack" aria-label="Volver al menú de temas">← Volver</button>
+  <h2>Vocabulario</h2>
+  <main class="contenido" tabindex="0">
+    <p style="text-align: center; font-family: 'Baguet Script', sans-serif;">VOCABULARIO</p>
+    <img src="images/VOCABULARIO 1.webp" alt=""/>
+    <img src="images/VOCABULARIO DE OBJETOS.png" alt=""/>
+    <a href="https://youtu.be/UUADD6J07cU?si=1FC6pzSNM4DN0x5i" target="_blank">Ver video del vocabulario de objetos en ingles</a>
+    
+    <div class="ejercicios" aria-label="Ejercicios sobre vocabulario">
+      <h3>Ejercicios</h3>
+      <div class="pregunta" id="pregunta-vocabulario">¿Cómo se dice "cama" en ingles?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario')">Cupboard</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'vocabulario')">Bed</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario')">Dog</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario')">Video games</button>
+      </div>
+      <div class="resultado" id="resultado-vocabulario" aria-live="polite"></div>
+    </div>
+    <video controls aria-label="Audio para apoyo en resolucion de ejercicios">
+      <source src="images/VOCABULARIO_AUDIO1.mp3" type="video/mp4">
+    </video>
+
+    <div class="ejercicios">
+      <div class="pregunta">¿Cómo se dice "Almohada" en ingles?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario2')">Lion</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario2')">Toys</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario2')">Horse</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'vocabulario2')">Pillow</button>
+      </div>
+      <div class="resultado" id="resultado-vocabulario2" aria-live="polite"></div>
+    </div>
+    <video controls aria-label="Audio para apoyo en resolucion de ejercicios">
+      <source src="images/VOCABULARIO_AUDIO2.mp3" type="video/mp4">
+    </video>
+
+    <div class="ejercicios">
+      <div class="pregunta">¿Cómo se dice "Video juegos" en ingles?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'vocabulario3')">Video games</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario3')">Desk lamp</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario3')">TV</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario3')">two</button>
+      </div>
+      <div class="resultado" id="resultado-vocabulario3" aria-live="polite"></div>
+    </div>
+    <video controls aria-label="Audio para apoyo en resolucion de ejercicios">
+      <source src="images/VOCABULARIO_AUDIO3.mp3" type="video/mp4">
+    </video>
+
+    <div style="text-align: center;">
+      <img src="images/VOCABULARIO DE ANIMALES.png" alt=""/>
+      <br>
+      <a href="https://youtu.be/uTekeOkExEE" target="_blank">Ver video de animales y su pronunciación en YouTube</a>
+    </div>
+
+    <div class="ejercicios">
+      <h3>Ejercicios</h3>
+      <div class="pregunta">¿Cómo se dice "Conejo" en ingles?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'vocabulario4')">Rabbit</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario4')">Pig</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario4')">Dog</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario4')">Fish</button>
+      </div>
+      <div class="resultado" id="resultado-vocabulario4" aria-live="polite"></div>
+    </div>
+    <video controls aria-label="Audio para apoyo en resolucion de ejercicios">
+      <source src="images/VOCABULARIO_AUDIO4.mp3" type="video/mp4">
+    </video>
+
+    <div class="ejercicios">
+      <div class="pregunta">¿Cómo se dice "Caballo" en ingles?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario5')">Lion</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario5')">Pig</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'vocabulario5')">Horse</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario5')">Fish</button>
+      </div>
+      <div class="resultado" id="resultado-vocabulario5" aria-live="polite"></div>
+    </div>
+    <video controls aria-label="Audio para apoyo en resolucion de ejercicios">
+      <source src="images/VOCABULARIO_AUDIO5.mp3" type="video/mp4">
+    </video>
+
+    <div class="ejercicios">
+      <div class="pregunta">¿Cómo se dice "Elefante" en ingles?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'vocabulario6')">Elephant</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario6')">Fish</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario6')">Lion</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario6')">Dog</button>
+      </div>
+      <div class="resultado" id="resultado-vocabulario6" aria-live="polite"></div>
+    </div>
+    <video controls aria-label="Audio para apoyo en resolucion de ejercicios">
+      <source src="images/VOCABULARIO_AUDIO6.mp3" type="video/mp4">
+    </video>
+
+    <img src="images/VOCABULARIO DE FAMILIA.png" alt="" style="display: block; margin: 0 auto;">
+    <br>
+    <a href="https://youtu.be/tS8q86ODHuc" target="_blank">Ver video de familia y su pronunciación</a>
+
+    <div class="ejercicios">
+      <h3>Ejercicios</h3>
+      <div class="pregunta">¿Cómo se dice "Abuela" en ingles?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'vocabulario7')">Grandmother</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario7')">Mom</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario7')">Aunt</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario7')">Cousin</button>
+      </div>
+      <div class="resultado" id="resultado-vocabulario7" aria-live="polite"></div>
+    </div>
+    <video controls aria-label="Audio para apoyo en resolucion de ejercicios">
+      <source src="images/VOCABULARIO_AUDIO7.mp3" type="video/mp4">
+    </video>
+
+    <div class="ejercicios">
+      <div class="pregunta">¿Cómo se dice "Hermano" en ingles?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario8')">Cousin</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario8')">Dad</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario8')">Aunt</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'vocabulario8')">Brother</button>
+      </div>
+      <div class="resultado" id="resultado-vocabulario8" aria-live="polite"></div>
+    </div>
+    <video controls aria-label="Audio para apoyo en resolucion de ejercicios">
+      <source src="images/VOCABULARIO_AUDIO8.mp3" type="video/mp4">
+    </video>
+
+    <div class="ejercicios">
+      <div class="pregunta">¿Cómo se dice "Primo" en ingles?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'vocabulario9')">Cousin</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario9')">Mom</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario9')">Uncle</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'vocabulario9')">Grandfather</button>
+      </div>
+      <div class="resultado" id="resultado-vocabulario9" aria-live="polite"></div>
+    </div>
+    <video controls aria-label="Audio para apoyo en resolucion de ejercicios">
+      <source src="images/VOCABULARIO_AUDIO9.mp3" type="video/mp4">
+    </video>
+  </main>
+</section>
+
+<section id="verbos" class="screen" aria-label="Tema Verbos">
+  <button class="btnBack" aria-label="Volver al menú de temas">← Volver</button>
+  <h2>Verbos</h2>
+  <main class="contenido" tabindex="0">
+    <p style="text-align: center; font-family: 'Baguet Script', sans-serif;">VERBOS EN INGLES</p>
+    <img src="images/VERBOS.png" alt="Espacio para imagen de verbos" />
+    <img src="images/TABLA 1 VERBOS.png" alt="Espacio para tabla" />
+    <audio controls src="" aria-label="Audio de verbos"></audio>
+    <div class="ejercicios" aria-label="Ejercicios sobre verbos">
+      <h3>Ejercicios</h3>
+      <div class="pregunta" id="pregunta-verbos">¿Cómo se dice "Correr" en inglés?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'verbos')">Run</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'verbos')">Walk</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'verbos')">Jump</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'verbos')">Eat</button>
+      </div>
+      <div class="resultado" id="resultado-verbos" aria-live="polite"></div>
+    </div>
+  </main>
+</section>
+
+<section id="saludos" class="screen" aria-label="Tema Saludos">
+  <button class="btnBack" aria-label="Volver al menú de temas">← Volver</button>
+  <h1>🗣️ Ejercicios: Saludos en inglés👋🏻</h1>
+  <div style="text-align: center;">
+  <img src="images/saludos.jpg" alt="Espacio para imagen de pronombres" />
+  </div>
+  <div class="ejercicios">
+    <h3>Ejercicio 1</h3>
+    <div class="pregunta">SALUDOS INFORMALES: ¿Cómo se dice "Hola, ¿qué tal?" en inglés?</div>
+    <div class="opciones">
+      <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this)">Hi, how's it going?</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Hello, what you?</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Please?</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Good morning?</button>
+    </div>
+    <div class="resultado" aria-live="polite"></div>
+  </div>
+
+  <div class="ejercicios">
+    <h3>Ejercicio 2</h3>
+    <div class="pregunta">SALUDOS FORMALES: ¿Cómo se dice "Buenas tardes" en inglés?</div>
+    <div class="opciones">
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Good evening</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">It's a pleasure to meet you</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Good morning</button>
+      <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this)">Good afternoon</button>
+    </div>
+    <div class="resultado" aria-live="polite"></div>
+  </div>
+
+  <div class="ejercicios">
+    <h3>Ejercicio 3</h3>
+    <div class="pregunta">SALUDOS COLOQUIALES: ¿Cómo se dice "¡Hola, compa!?" en inglés?</div>
+    <div class="opciones">
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Hello, morning</button>
+      <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this)">Hey bro! / Hey dude!</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Yo man! / Hey buddy!</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">What's up! / Sup!</button>
+    </div>
+    <div class="resultado" aria-live="polite"></div>
+  </div>
+
+  <div class="ejercicios">
+    <h3>Ejercicio 4</h3>
+    <div class="pregunta">SALUDOS COMUNES: ¿Cómo se dice "¡Encantado/a de verte!" en inglés?</div>
+    <div class="opciones">
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Hi, how are you?</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Good day</button>
+      <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this)">Great to see you!</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Nice to meet you</button>
+    </div>
+    <div class="resultado" aria-live="polite"></div>
+  </div>
+
+  <div class="ejercicios">
+    <h3>Ejercicio 5</h3>
+    <div class="pregunta">SALUDOS COMUNES: ¿Cómo se dice "¿Cómo va todo?" en inglés?</div>
+    <div class="opciones">
+      <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this)">How's it going?</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Good</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">I love you</button>
+      <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this)">Hey there! / Hi there!</button>
+    </div>
+    <div class="resultado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="numeros" class="screen" aria-label="Tema Números">
+  <button class="btnBack" aria-label="Volver al menú de temas">← Volver</button>
+  <h2>Números</h2>
+  <main class="contenido" tabindex="0">
+    <p>Aprende los números en inglés del 1 al 10, y luego cuenta de diez en diez hasta el 100.</p>
+    <img src="images/NUMERO COLORIDOS 1 AL 10.jpg" alt="Números coloridos del 1 al 10" />
+    <div class="Los numeros">
+      <img src="images/NUMEROS CON COLORES.jpg" alt="Números coloridos en inglés" />
+    </div>
+    <p>Los numero del 1 al 10</p>
+    <video controls aria-label="Video sobre los números en inglés">
+      <source src="images/NUMÉROS.m4a" type="video/mp4">
+    </video>
+    <p>Cancion de los numeros</p>
+    <video controls aria-label="Canción para aprender los números">
+      <source src="images/CANCION NUMEROS.m4a" type="video/mp4">
+    </video>
+    <div class="ejercicios" aria-label="Ejercicios sobre números del 1 al 10">
+      <h3>Números del 1 al 10</h3>
+      <div class="pregunta" id="pregunta-numeros1">¿Cuál es el número "Five" en español?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros1')">Cuatro</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'numeros1')">Cinco</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros1')">Seis</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros1')">Siete</button>
+      </div>
+      <div class="resultado" id="resultado-numeros1" aria-live="polite"></div>
+      <br>
+      <div class="pregunta" id="pregunta-numeros2">¿Cómo se dice "Tres" en inglés?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros2')">Two</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'numeros2')">Three</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros2')">Four</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros2')">Ten</button>
+      </div>
+      <div class="resultado" id="resultado-numeros2" aria-live="polite"></div>
+      <br>
+      <div class="pregunta" id="pregunta-numeros5">¿Cómo se dice "Uno" en inglés?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'numeros5')">One</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros5')">Eight</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros5')">Nine</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros5')">Five</button>
+      </div>
+      <div class="resultado" id="resultado-numeros5" aria-live="polite"></div>
+    </div>
+    <br>
+    <div class="ejercicios" aria-label="Ejercicios sobre números del 10 al 100">
+      <h3>Números del 10 en 10 hasta 100</h3>
+      <div class="pregunta" id="pregunta-numeros3">¿Cómo se dice "Treinta" en inglés?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros3')">Twenty</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'numeros3')">Thirty</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros3')">Fifty</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros3')">Sixty</button>
+      </div>
+      <div class="resultado" id="resultado-numeros3" aria-live="polite"></div>
+      <br>
+      <div class="pregunta" id="pregunta-numeros4">¿Cuál es el número en inglés para "Setenta"?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros4')">Eighty</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros4')">Ninety</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'numeros4')">Seventy</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros4')">Forty</button>
+      </div>
+      <div class="resultado" id="resultado-numeros4" aria-live="polite"></div>
+      <br>
+      <div class="pregunta" id="pregunta-numeros6">¿Cómo se dice "Cien" en inglés?</div>
+      <div class="opciones">
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros6')">Ten</button>
+        <button class="btnTema" data-correct="true" onclick="verificarRespuesta(this, 'numeros6')">One Hundred</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros6')">Thousand</button>
+        <button class="btnTema" data-correct="false" onclick="verificarRespuesta(this, 'numeros6')">Hundred Ten</button>
+      </div>
+      <div class="resultado" id="resultado-numeros6" aria-live="polite"></div>
+    </div>
+  </main>
+</section>
+
+<script>
+const btnMenu = document.getElementById('btnMenu');
+const menuDropdown = document.getElementById('menuDropdown');
+const temaBtns = document.querySelectorAll('.temaBtn');
+const screens = document.querySelectorAll('.screen');
+const btnBacks = document.querySelectorAll('.btnBack');
+
+btnMenu.addEventListener('click', (e) => {
+  e.stopPropagation();
+  menuDropdown.classList.toggle('show');
+});
+
+document.addEventListener('click', (e) => {
+  if (!menuDropdown.contains(e.target) && !btnMenu.contains(e.target)) {
+    menuDropdown.classList.remove('show');
+  }
+});
+
+temaBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.getAttribute('data-target');
+    mostrarPantalla(target);
+    menuDropdown.classList.remove('show');
+  });
+});
+
+btnBacks.forEach(btn => {
+  btn.addEventListener('click', () => {
+    mostrarPantalla('inicio');
+  });
+});
+
+function mostrarPantalla(id) {
+  screens.forEach(screen => screen.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+const imgs = document.querySelectorAll('.carousel img');
+let i = 0;
+setInterval(() => {
+  imgs[i].classList.remove('active');
+  i = (i + 1) % imgs.length;
+  imgs[i].classList.add('active');
+}, 3000);
+
+function verificarRespuesta(btn, tema) {
+  const esCorrecto = btn.getAttribute("data-correct") === "true";
+  
+  // Encuentra solo los botones del mismo grupo de opciones
+  const contenedorOpciones = btn.closest(".opciones");
+  const botones = contenedorOpciones.querySelectorAll(".btnTema");
+  const resultado = document.getElementById(`resultado-${tema}`);
+
+  // Deshabilita solo los botones de esta pregunta específica
+  botones.forEach(b => b.disabled = true);
+
+  if (esCorrecto) {
+    btn.classList.add("correcta");
+    resultado.innerHTML = "✅ ¡Correcto!";
+    resultado.className = "resultado correcto";
+  } else {
+    btn.classList.add("incorrecta");
+    resultado.innerHTML = "❌ Incorrecto";
+    resultado.className = "resultado incorrecto";
+    
+    // Rehabilitar después de 2 segundos si falla
+    setTimeout(() => {
+      botones.forEach(b => {
+        b.disabled = false;
+        b.classList.remove("incorrecta");
+      });
+      resultado.innerHTML = "";
+    }, 2000);
+  }
+}
+
+const colors = [
+  {en: "Red", es: "Rojo", hex: "#FF0000", anim: "bounce"},
+  {en: "Blue", es: "Azul", hex: "#0000FF", anim: "spin"},
+  {en: "Green", es: "Verde", hex: "#008000", anim: "fadeIn"},
+  {en: "Yellow", es: "Amarillo", hex: "#FFFF00", anim: "slideIn"},
+  {en: "Orange", es: "Naranja", hex: "#FFA500", anim: "zoomIn"},
+  {en: "Purple", es: "Morado", hex: "#800080", anim: "bounce"},
+  {en: "Pink", es: "Rosa", hex: "#FFC0CB", anim: "slideIn"},
+  {en: "Brown", es: "Marrón", hex: "#8B4513", anim: "zoomIn"},
+  {en: "Black", es: "Negro", hex: "#000000", anim: "spin"},
+  {en: "White", es: "Blanco", hex: "#FFFFFF", anim: "fadeIn"},
+  {en: "Gray", es: "Gris", hex: "#808080", anim: "slideIn"},
+  {en: "Cyan", es: "Cian", hex: "#00FFFF", anim: "zoomIn"},
+  {en: "Magenta", es: "Magenta", hex: "#FF00FF", anim: "bounce"},
+  {en: "Gold", es: "Dorado", hex: "#FFD700", anim: "spin"},
+  {en: "Silver", es: "Plateado", hex: "#C0C0C0", anim: "fadeIn"}
+];
+
+const grid = document.getElementById('colorGrid');
+colors.forEach((color, idx) => {
+  const card = document.createElement('div');
+  card.className = 'color-card';
+  card.style.backgroundColor = color.hex;
+  card.innerHTML = `<div>${color.en}</div><div class="translation" id="t${idx}">${color.es}</div>`;
+  card.addEventListener('click', () => {
+    const translation = document.getElementById(`t${idx}`);
+    translation.classList.add('show');
+    translation.style.animation = `${color.anim} 1s ease`;
+    const utter = new SpeechSynthesisUtterance(color.en);
+    utter.lang = "en-US";
+    speechSynthesis.speak(utter);
+  });
+  grid.appendChild(card);
+});
+
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  speechSynthesis.speak(utterance);
+}
+
+const sounds = {
+  Circle: "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg",
+  Square: "https://actions.google.com/sounds/v1/cartoon/pop.ogg",
+  Rectangle: "https://actions.google.com/sounds/v1/cartoon/drip_echo.ogg",
+  Triangle: "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg",
+  Oval: "https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg",
+  Diamond: "https://actions.google.com/sounds/v1/cartoon/concussive_hit_guitar_boing.ogg",
+  Pentagon: "https://actions.google.com/sounds/v1/cartoon/metal_clang.ogg",
+  Hexagon: "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg",
+  Star: "https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg",
+  Heart: "https://actions.google.com/sounds/v1/cartoon/boing.ogg",
+  Parallelogram: "https://actions.google.com/sounds/v1/cartoon/pop.ogg",
+  Trapezoid: "https://actions.google.com/sounds/v1/cartoon/concussive_hit_guitar_boing.ogg",
+  Crescent: "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg",
+  Pentagram: "https://actions.google.com/sounds/v1/cartoon/slide_whistle.ogg",
+  Ellipse: "https://actions.google.com/sounds/v1/cartoon/drip_echo.ogg"
+};
+
+function playSound(url) { new Audio(url).play(); }
+
+document.querySelectorAll(".shape-container").forEach(container => {
+  const english = container.dataset.en;
+  const spanish = container.dataset.es;
+  const translationDiv = container.querySelector(".translation");
+  const button = container.querySelector(".translate-btn");
+
+  container.querySelector(".shape").addEventListener("click", () => {
+    playSound(sounds[english]);
+    speak(english);
+  });
+
+  button.addEventListener("click", () => {
+    if (translationDiv.style.display === "block") {
+      translationDiv.style.display = "none";
+      button.textContent = "Traducir";
+    } else {
+      translationDiv.textContent = spanish;
+      translationDiv.style.display = "block";
+      button.textContent = "Ocultar";
+    }
+  });
+});
+
+document.querySelectorAll(".options button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    speak(btn.textContent);
+    if (btn.dataset.answer === "Correct") {
+      new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg").play();
+      alert("✅ ¡Correcto!");
+    } else {
+      new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg").play();
+      alert("❌ Intenta de nuevo.");
+    }
+  });
+});
+
+function verificarRespuestaPronombres(btn, idResultado) {
+  const esCorrecto = btn.getAttribute("data-correct") === "true";
+  const contenedor = btn.closest(".opciones");
+  const botones = contenedor.querySelectorAll(".btnTema");
+  const resultado = document.getElementById(`resultado-${idResultado}`);
+  botones.forEach(b => b.disabled = true);
+  if (esCorrecto) {
+    btn.classList.add("correcta");
+    resultado.innerHTML = "✅ ¡Correcto!";
+    resultado.className = "resultado correcto";
+  } else {
+    btn.classList.add("incorrecta");
+    resultado.innerHTML = "❌ Incorrecto";
+    resultado.className = "resultado incorrecto";
+  }
+}
+
+</script>
+</body>
+</html>
